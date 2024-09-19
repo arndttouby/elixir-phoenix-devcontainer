@@ -1,26 +1,30 @@
 services:
-  db:
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: phoenix_deploy_test_dev
-    volumes:
-      - postgres:/var/lib/postgresql/data
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - 5432:5432
+  # db:
+  #   image: postgres:16
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: phoenix_deploy_test_dev
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data
+  #     - /etc/localtime:/etc/localtime:ro
+  #   ports:
+  #     - 5432:5432
 
   app:
     command: bash #-c "mix deps.get && mix phx.server"
     tty: true
     stdin_open: true
-    build: https://raw.githubusercontent.com/arndttouby/elixir-phoenix-devcontainer/main/Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    
     environment:
       - HISTFILE=/usr/local/hist/.bash_history
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
     volumes:
       - .:/app
       - bash_history:/usr/local/hist
@@ -30,4 +34,4 @@ services:
 
 volumes:
   bash_history:
-  postgres:
+  # postgres:
